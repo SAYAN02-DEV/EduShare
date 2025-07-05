@@ -1,0 +1,130 @@
+.edushare {
+  	background: linear-gradient(90deg, #417dea, #254784);
+  	-webkit-background-clip: text;
+  	-webkit-text-fill-color: transparent;
+}
+.because {
+  	background: linear-gradient(90deg, #b7b9bd, #545557 97.6%);
+  	-webkit-background-clip: text;
+  	-webkit-text-fill-color: transparent;
+}
+.edushareBecause {
+  	width: 617px;
+  	position: relative;
+  	font-size: 50px;
+  	display: inline-block;
+  	font-family: Jost;
+  	text-align: center;
+  	height: 96px;
+  	color: #b7b9bd;
+}
+.knowledgeIsMeant {
+width: 1110px;
+position: relative;
+font-size: 50px;
+display: inline-block;
+font-family: Jost;
+background: linear-gradient(90deg, #b7b9bd, #545557 82.69%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+text-align: center;
+height: 96px;
+}
+.heroContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 60px; /* adjust as needed */
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.explore {
+  width: fit-content;
+  height: 68px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(92.47deg, #ded37e, #987a27);
+  font-weight: 600;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Jost', sans-serif;
+  transition: transform 0.2s ease;
+}
+
+.explore:hover {
+  transform: scale(1.05);
+}
+.Create {
+  width: fit-content;
+  height: 68px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(92.36deg, #d9d9d9, #737373);
+  font-weight: 600;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  display: flex;            
+  align-items: center;      
+  justify-content: center;
+  font-family: 'Jost', sans-serif;
+  transition: transform 0.2s ease;
+}
+
+.Create:hover {
+  transform: scale(1.05);
+}
+.frameParent {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  padding: 120px;
+  box-sizing: border-box;
+}
+
+/* All course image wrappers, including DSCourse */
+.courseImageWrapper {
+  flex: 1 1 calc(50% - 24px); /* 2 per row */
+  max-width: calc(50% - 24px);
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* The course images themselves */
+.courseImage {
+  width: 100%;
+  height: 340px;
+  border-radius: 54px;
+  object-fit: cover;
+  max-width: 480px;
+  transition: transform 0.2s ease;
+}
+.courseImage:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive layout: 1 image per row on smaller screens */
+@media (max-width: 768px) {
+  .courseImageWrapper {
+    flex: 1 1 100%;
+    max-width: 100%;
+    padding: 24px 16px;
+  }
+}
+
