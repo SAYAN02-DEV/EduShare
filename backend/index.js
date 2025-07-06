@@ -1,9 +1,16 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 const PORT = 3000;
 
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: false,
+}));
 
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/course-sell')
@@ -20,7 +27,9 @@ mongoose.connect('mongodb://localhost:27017/course-sell')
 // Route imports
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const youtubeAPI = require('./routes/youtubeAPI');
 
 // Use routes
 app.use('/user', userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/api', youtubeAPI);
