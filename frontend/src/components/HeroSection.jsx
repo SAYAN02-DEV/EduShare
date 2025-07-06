@@ -3,7 +3,7 @@ import DSCourse from '../assets/DSCourse.png';
 import MLCourse from '../assets/MLCourse.png';
 import WEB3Course from '../assets/WEB3Course.png';
 import WebDevCourse from '../assets/webDevCourse.png';
-
+import { Link } from 'react-router-dom';
 
 function EdushareBecause() {
   return (
@@ -62,7 +62,9 @@ function HeroSection() {
         <EdushareBecause />
         <KnowledgeIsMeantToBeShared />
         <div style={{display: 'flex', gap: '20px'}}>
-            <Explore/>
+            <Link to = 'searchcourses'>
+              <Explore/>
+            </Link>
             <Create/>
         </div>
         <Frame9/>

@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import styles from './NavigationBar.module.css';
+// import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
 
 function LoginButton({ onClick }) {
     return (
@@ -24,11 +26,17 @@ function NavigationBar() {
     return (
         <nav className={styles.navbar}>
             <div className={styles.logoWrapper}>
-                <EduShare />
+                <Link to='/'>
+                    <EduShare />
+                </Link>
             </div>
             <div className={styles.buttonGroup}>
-                <LoginButton />
-                <RegisterButton />
+                <Link to= 'login'>
+                    <LoginButton />
+                </Link>
+                <Link to = 'register'>
+                    <RegisterButton />
+                </Link>
             </div>
         </nav>
     );
