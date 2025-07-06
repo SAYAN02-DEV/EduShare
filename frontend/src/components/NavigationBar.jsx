@@ -3,6 +3,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useState } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+function handleLogout(){
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+}
+
 function NavigationBar() {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
     return (
@@ -34,7 +39,7 @@ function NavigationBar() {
                             variant="outlined"
                             color="inherit"
                             sx={{ fontWeight: 600 }}
-                            onClick={()=>{setIsLoggedIn(false)}}
+                            onClick={handleLogout}
                             >
                             Logout
                             </Button>

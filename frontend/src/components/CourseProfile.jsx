@@ -1,114 +1,259 @@
-import React from 'react';
-import { Box, Card, CardMedia, Typography, Button, List, ListItem, ListItemText, Divider } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Box, Card, CardMedia, Typography, Button,
+  List, ListItem, ListItemText, Divider
+} from '@mui/material';
+import axios from 'axios';
+
+const API_KEY = 'AIzaSyBZGIvrPm6XA6k4tfzOXr7lHiWMDBI6xL8';
+const PLAYLIST_ID = 'PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE';
 
 const CourseProfile = () => {
-  // Placeholder data
-  const course = {
-    image: 'https://via.placeholder.com/150',
-    name: 'Course Name',
-    creator: 'Instructor Name',
-    duration: '5h 30m',
-    date: '2024-06-01',
-    price: '$49.99',
-    videos: [
-      { title: 'Introduction to the Course', duration: '10:00' },
-      { title: 'Getting Started', duration: '15:30' },
-      { title: 'Core Concepts', duration: '22:10' },
-      { title: 'Project Walkthrough', duration: '18:45' },
-      { title: 'Summary & Next Steps', duration: '8:20' },
-    ],
+  const [course, setCourse] = useState(null);
+  const [isPurchased, setIsPurchased] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems', {
+          params: {
+            part: 'snippet',
+            maxResults: 10,
+            playlistId: PLAYLIST_ID,
+            key: API_KEY,
+          },
+        });
+
+        const items = res.data.items;
+        const firstVideo = items[0];
+        const videoIds = items.map(item => item.snippet.resourceId.videoId).join(',');
+
+        const videoRes = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
+          params: {
+            part: 'contentDetails',
+            id: videoIds,
+            key: API_KEY,
+          },
+        });
+
+        const durations = videoRes.data.items.map(item =>
+          parseDuration(item.contentDetails.duration)
+        );
+
+        const courseData = {
+          image: firstVideo.snippet.thumbnails.medium.url,
+          name: firstVideo.snippet.title,
+          creator: firstVideo.snippet.channelTitle,
+          duration: 'Approx. ' + getTotalDuration(durations),
+          date: '2024-06-01',
+          price: '₹499',
+          videos: items.map((item, i) => ({
+            title: item.snippet.title,
+            duration: durations[i],
+            videoUrl: `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`,
+          })),
+        };
+
+        setCourse(courseData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const parseDuration = (ISO) => {
+    const match = ISO.match(/PT(?:(\d+)M)?(?:(\d+)S)?/);
+    const minutes = parseInt(match?.[1] || 0);
+    const seconds = parseInt(match?.[2] || 0);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'flex-start',
-        background: 'linear-gradient(180deg, #162138 0%, #1e293b 100%)',
-        p: 4,
-        gap: 3,
-      }}
-    >
-      {/* Left: Course Card */}
-      <Card
-        sx={{
-          width: 260,
-          minHeight: 400,
-          borderRadius: 4,
-          p: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          background: 'linear-gradient(180deg, #232b4a 0%, #23244a 100%)',
-          boxShadow: 3,
-        }}
-      >
-        <CardMedia
-          component="img"
-          image={course.image}
-          alt={course.name}
-          sx={{
-            width: 160,
-            height: 160,
-            borderRadius: 2,
-            background: '#fff',
-            mb: 2,
-          }}
-        />
-        <Typography variant="body1" sx={{ mb: 1 }}>
-          <b>{course.name}</b>
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          <b>Created By:</b> {course.creator}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          <b>Duration:</b> {course.duration}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          <b>Date Published:</b> {course.date}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 2 }}>
-          <b>Price:</b> {course.price}
-        </Typography>
-        <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }}>
-          Buy Course
-        </Button>
-      </Card>
+  const getTotalDuration = (durations) => {
+    let totalSeconds = 0;
+    durations.forEach(time => {
+      const [min, sec] = time.split(':').map(Number);
+      totalSeconds += min * 60 + sec;
+    });
+    const totalMin = Math.floor(totalSeconds / 60);
+    return `${totalMin} min`;
+  };
 
-      {/* Right: Videos List */}
-      <Card
+  const handleWatch = (videoUrl) => {
+    setSelectedVideo(videoUrl);
+  };
+
+  const handleClose = () => {
+    setSelectedVideo(null);
+  };
+
+  if (!course) return <Typography sx={{ color: '#fff', p: 4 }}>Loading...</Typography>;
+
+  return (
+    <>
+      <Box
         sx={{
-          flex: 1,
-          minHeight: 400,
-          borderRadius: 4,
-          p: 3,
-          background: 'linear-gradient(180deg, #232b4a 0%, #23244a 100%)',
-          boxShadow: 3,
-          ml: 2,
+          minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column',
+          alignItems: 'flex-start',
+          background: 'linear-gradient(180deg, #162138 0%, #1e293b 100%)',
+          p: 4,
+          gap: 3,
         }}
       >
-        <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
-          Course Content
-        </Typography>
-        <Divider sx={{ mb: 2, background: '#334155' }} />
-        <List>
-          {course.videos.map((video, idx) => (
-            <ListItem key={idx} sx={{ px: 0 }}>
-              <ListItemText
-                primary={video.title}
-                secondary={`Duration: ${video.duration}`}
-                primaryTypographyProps={{ style: { color: '#fff', fontWeight: 500 } }}
-                secondaryTypographyProps={{ style: { color: '#cbd5e1' } }}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Card>
-    </Box>
+        {/* Left: Course Card */}
+        <Card
+          sx={{
+            width: 260,
+            minHeight: 400,
+            borderRadius: 4,
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            background: 'linear-gradient(180deg, #232b4a 0%, #23244a 100%)',
+            boxShadow: 3,
+          }}
+        >
+          <CardMedia
+            component="img"
+            image={course.image}
+            alt={course.name}
+            sx={{
+              width: 160,
+              height: 160,
+              borderRadius: 2,
+              background: '#fff',
+              mb: 2,
+            }}
+          />
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            <b>{course.name}</b>
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            <b>Created By:</b> {course.creator}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            <b>Duration:</b> {course.duration}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            <b>Date Published:</b> {course.date}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            <b>Price:</b> {course.price}
+          </Typography>
+          <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }}>
+            Buy Course
+          </Button>
+        </Card>
+
+        {/* Right: Videos List */}
+        <Card
+          sx={{
+            flex: 1,
+            minHeight: 400,
+            borderRadius: 4,
+            p: 3,
+            background: 'linear-gradient(180deg, #232b4a 0%, #23244a 100%)',
+            boxShadow: 3,
+            ml: 2,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+            Course Content
+          </Typography>
+          <Divider sx={{ mb: 2, background: '#334155' }} />
+          <List>
+            {course.videos.map((video, idx) => (
+              <ListItem key={idx} sx={{ px: 0 }}
+                secondaryAction={
+                  isPurchased ? (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      size="small"
+                      onClick={() => handleWatch(video.videoUrl)}
+                    >
+                      Watch
+                    </Button>
+                  ) : null
+                }
+              >
+                <ListItemText
+                  primary={video.title}
+                  secondary={`Duration: ${video.duration}`}
+                  primaryTypographyProps={{ style: { color: '#fff', fontWeight: 500 } }}
+                  secondaryTypographyProps={{ style: { color: '#cbd5e1' } }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Card>
+      </Box>
+
+      {/* Modal Overlay Video Player */}
+      {selectedVideo && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.85)',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            padding: 2,
+            overflowY: 'auto',
+          }}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: 900,
+              position: 'relative',
+              aspectRatio: '16 / 9',
+            }}
+          >
+            <iframe
+              width="100%"
+              height="100%"
+              src={selectedVideo.replace("watch?v=", "embed/") + '?autoplay=1'}
+              title="Course Video"
+              frameBorder="0"
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              style={{ borderRadius: '10px' }}
+            ></iframe>
+
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleClose}
+              sx={{
+                position: 'absolute',
+                top: -50,
+                right: 0,
+                '@media (max-width:600px)': {
+                  top: '-40px',
+                  right: '10px',
+                },
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
-export default CourseProfile; 
+export default CourseProfile;
