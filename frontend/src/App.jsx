@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import  NavigationBar from './components/NavigationBar.jsx';
 import  HeroSection from './components/HeroSection.jsx'
 import Footer from './components/footer.jsx'
@@ -8,13 +6,13 @@ import Login from './components/login.jsx'
 import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
 import Register from './components/Register.jsx';
 import SearchCourses from './components/SearchCourses.jsx';
-
-import './App.css'
+import CourseProfile from './components/CourseProfile.jsx';
+import UserProfile from './components/UserProfile.jsx';
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #131F39 19.1%, rgba(11, 13, 20, 0.07) 100%)' }}>
       <BrowserRouter>
         <Routes>
           <Route path = '/' element={<Layout/>}>
@@ -22,7 +20,8 @@ function App() {
             <Route path='login' element={<Login/>}/>
             <Route path='register' element={<Register/>}/>
             <Route path='searchcourses' element={<SearchCourses/>}/>
-
+            <Route path='courseprofile' element={<CourseProfile/>}/>
+            <Route path='userprofile' element={<UserProfile/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
@@ -32,9 +31,11 @@ function App() {
 
 function Layout(){
   return(
-    <div>
+    <div className="min-h-screen flex flex-col" style={{ paddingTop: 64 }}>
       <NavigationBar/>
-      <Outlet/>
+      <main className="flex-1">
+        <Outlet/>
+      </main>
       <Footer/>
     </div>
   )
