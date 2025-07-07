@@ -1,20 +1,28 @@
-import React, { useState } from 'react';
-import { Grid, Card, CardMedia, CardContent, Typography, TextField, Box } from '@mui/material';
-
-const sampleCourses = [
-  { id: 1, image: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg', title: 'Course 1' },
-  { id: 2, image: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg', title: 'Course 2' },
-  { id: 3, image: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg', title: 'Course 3' },
-  { id: 4, image: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg', title: 'Course 4' },
-  { id: 5, image: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg', title: 'Course 5' },
-  { id: 6, image: 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?cs=srgb&dl=pexels-souvenirpixels-414612.jpg&fm=jpg', title: 'Course 6' },
-];
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Grid, Card, CardMedia, CardContent, Typography, TextField, Box, CircularProgress } from '@mui/material';
 
 function SearchCourses() {
   const [query, setQuery] = useState('');
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredCourses = sampleCourses.filter(course =>
-    course.title.toLowerCase().includes(query.toLowerCase())
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const res = await axios.get('http://localhost:3000/api/searchcourse'); // replace with your actual backend URL
+        setCourses(res.data);
+      } catch (err) {
+        console.error('Failed to fetch courses:', err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
+
+  const filteredCourses = courses.filter(course =>
+    course.name.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
@@ -29,26 +37,43 @@ function SearchCourses() {
           sx={{ background: '#fff', borderRadius: 2 }}
         />
       </Box>
-      <Grid container spacing={4} justifyContent="center" maxWidth={1200} mx="auto">
-        {filteredCourses.map(course => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={course.id}>
-            <Card sx={{ borderRadius: 3, boxShadow: 4, height: '100%', display: 'flex', flexDirection: 'column', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.03)' } }}>
-              <CardMedia
-                component="img"
-                height="160"
-                image={course.image}
-                alt={course.title}
-                sx={{ objectFit: 'cover' }}
-              />
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6" align="center" fontWeight={600} color="text.primary">
-                  {course.title}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+
+      {loading ? (
+        <Box display="flex" justifyContent="center" mt={8}>
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <Grid container spacing={4} justifyContent="center" maxWidth={1200} mx="auto">
+          {filteredCourses.map((course, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Card
+                sx={{
+                  borderRadius: 3,
+                  boxShadow: 4,
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'scale(1.03)' },
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="160"
+                  image={course.image}
+                  alt={course.name}
+                  sx={{ objectFit: 'cover' }}
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="h6" align="center" fontWeight={600} color="text.primary">
+                    {course.name}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 }

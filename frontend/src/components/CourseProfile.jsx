@@ -5,31 +5,23 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 
-const API_KEY = 'AIzaSyBZGIvrPm6XA6k4tfzOXr7lHiWMDBI6xL8';
-const PLAYLIST_ID = 'PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE';
-
 const CourseProfile = () => {
   const [course, setCourse] = useState(null);
   const [isPurchased, setIsPurchased] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
   const fetchData = async () => {
-    try{
+    try {
       const res = await axios.get('http://localhost:3000/api/playlist');
       setCourse(res.data);
-    }catch(err){
-      console.error(err);
+    } catch (err) {
+      console.error('Failed to fetch course data:', err);
     }
   };
 
-
-  useEffect(() => {  
+  useEffect(() => {
     fetchData();
   }, []);
-
-  
-
-  
 
   const handleWatch = (videoUrl) => {
     setSelectedVideo(videoUrl);
@@ -39,7 +31,10 @@ const CourseProfile = () => {
     setSelectedVideo(null);
   };
 
-  if (!course) return <Typography sx={{ color: '#fff', p: 4 }}>Loading...</Typography>;
+  // Loading state or data not ready
+  if (!course || !course.videos) {
+    return <Typography sx={{ color: '#fff', p: 4 }}>Loading...</Typography>;
+  }
 
   return (
     <>
