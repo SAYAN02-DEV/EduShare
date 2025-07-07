@@ -1,25 +1,42 @@
 import React from 'react';
 import { Card, CardContent, Typography, TextField, Button, Box } from '@mui/material';
 import { useRef } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 function Register() {
+  const navigate = useNavigate();
   const nameRef = useRef();
-  const usernameRef = useRef();
+  const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
   function handleRegister() {
     const name = nameRef.current.value;
-    const username = usernameRef.current.value;
+    const email = emailRef.current.value;
     const password = passwordRef.current.value;
     const confirmPassword = confirmPasswordRef.current.value;
     if(password !== confirmPassword){
       alert("Passwords do not match");
       return;
     }
-    const userData = {name, username, password};
+    const userData = {name, email, password};
     console.log(userData);
     // Send login request via fetch or axios
+    axios.post('http://localhost:3000/user/signup',{
+      name,
+      email,
+      password,
+    }).then(
+      response => {
+        console.log('Sucessfully signed up!');
+        alert('sucessfully signed up! login to continue!');
+        navigate('/login');
+      }
+    ).catch(error => {
+      console.log(error);
+    })
+
   }
   return (
     <Box display="flex" alignItems="center" justifyContent="center" minHeight="80vh" bgcolor="#162138">
@@ -41,7 +58,7 @@ function Register() {
               type="email"
               variant="filled"
               fullWidth
-              inputRef = {usernameRef}
+              inputRef = {emailRef}
               InputProps={{ style: { background: 'rgba(255,255,255,0.79)', borderRadius: 12 } }}
             />
             <TextField
