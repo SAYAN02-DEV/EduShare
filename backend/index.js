@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+require('dotenv').config();
 
 app.use(express.json());
 app.use(cors({
@@ -13,7 +14,11 @@ app.use(cors({
 }));
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/course-sell')
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+  throw new Error('MONGO_URI environment variable not set');
+}
+mongoose.connect(mongoUri)
   .then(() => {
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {

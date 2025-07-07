@@ -71,6 +71,7 @@ function HeroSection() {
           variant="contained"
           color="inherit"
           size="large"
+          onClick={()=>{alert("functionality not added")}}
           sx={{ fontWeight: 600, borderRadius: 2, px: 4, background: 'linear-gradient(92.36deg, #d9d9d9, #737373)', color: '#222' }}
         >
           Create Courses
