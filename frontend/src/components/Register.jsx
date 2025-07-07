@@ -23,7 +23,7 @@ function Register() {
     const userData = {name, email, password};
     console.log(userData);
     // Send login request via fetch or axios
-    axios.post('http://localhost:3000/user/signup',{
+    axios.post('https://edu-share-project.vercel.app/user/signup',{
       name,
       email,
       password,

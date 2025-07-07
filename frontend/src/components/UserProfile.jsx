@@ -10,7 +10,7 @@ const UserProfile = () => {
 
   const fetchData = async () => {
   try {
-    const res = await axios.get('http://localhost:3000/user/mycourses', {
+    const res = await axios.get('https://edu-share-project.vercel.app/user/mycourses', {
       headers: {
         token: localStorage.getItem('token')  // ✅ must match backend expectations
       }

@@ -15,7 +15,7 @@ function Login() {
     const password = passwordRef.current.value;
     console.log('Sending to backend:', { email, password });
     // Send login request via fetch or 
-    axios.post('http://localhost:3000/user/signin',{
+    axios.post('https://edu-share-project.vercel.app/user/signin',{
       email,
       password,
     }).then(

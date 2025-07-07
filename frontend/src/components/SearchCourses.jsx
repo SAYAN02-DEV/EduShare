@@ -10,7 +10,7 @@ function SearchCourses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/searchcourse'); // replace with your actual backend URL
+        const res = await axios.get('https://edu-share-project.vercel.app/api/searchcourse'); // replace with your actual backend URL
         setCourses(res.data);
       } catch (err) {
         console.error('Failed to fetch courses:', err.message);

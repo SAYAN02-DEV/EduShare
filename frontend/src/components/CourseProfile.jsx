@@ -12,7 +12,7 @@ const CourseProfile = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/playlist');
+      const res = await axios.get('https://edu-share-project.vercel.app/api/playlist');
       setCourse(res.data);
     } catch (err) {
       console.error('Failed to fetch course data:', err);
