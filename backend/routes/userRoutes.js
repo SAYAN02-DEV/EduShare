@@ -90,4 +90,8 @@ router.post('/purchase', userAuth, async (req, res) => {
     }
 });
 
+//test route
+router.get('/test', (req, res) => {
+    res.send("Deployed sucessfully!")
+})
 module.exports = router;
