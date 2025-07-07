@@ -1,15 +1,15 @@
 import { AppBar, Toolbar, Button, Typography, Box } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { useState } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
-function handleLogout(){
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-}
+import { useAuth } from '../context/AuthContext.jsx';
 
 function NavigationBar() {
-    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+    const { isLoggedIn, logout } = useAuth();
+
+    const handleLogout = () => {
+        logout();
+    };
+
     return (
         <AppBar position="fixed" elevation={0} sx={{ bgcolor: '#162138', boxShadow: '0 8px 24px 0 rgba(0,0,0,0.32)' }}>
             <Toolbar sx={{ justifyContent: 'space-between' }}>

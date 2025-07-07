@@ -32,17 +32,38 @@ router.post('/signin', async (req, res) => {
 });
 
 // protected routes
+
 router.get('/mycourses', userAuth, async (req, res) => {
     try {
         const userCourses = await UserCoursesModel.findOne({ email: req.email });
-        if (!userCourses || userCourses.courses.length === 0) {
-            return res.status(200).json({ message: "No courses found", courses: [] });
+
+        const parsedUser = {
+            name: req.name,
+            email: req.email,
+            purchasedCourses: []
+        };
+
+        if (userCourses && userCourses.courses.length > 0) {
+            // Fetch detailed course info
+            const detailedCourses = await CourseDataModel.find({
+                _id: { $in: userCourses.courses }
+            });
+
+            // Format them for frontend
+            parsedUser.purchasedCourses = detailedCourses.map(course => ({
+                id: course._id,
+                name: course.name,
+                image: course.image || 'https://via.placeholder.com/80'
+            }));
         }
-        res.json({ message: "Courses fetched successfully", courses: userCourses.courses });
+
+        res.status(200).json(parsedUser);
+
     } catch (err) {
         res.status(500).json({ message: "Something went wrong", error: err.message });
     }
 });
+
 
 router.post('/purchase', userAuth, async (req, res) => {
     const { courseId } = req.body;
