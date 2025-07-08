@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Grid, Card, CardMedia, CardContent, Typography, TextField, Box, CircularProgress } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function SearchCourses() {
   const [query, setQuery] = useState('');
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -55,7 +57,7 @@ function SearchCourses() {
                   flexDirection: 'column',
                   transition: 'transform 0.2s',
                   '&:hover': { transform: 'scale(1.03)' },
-                }}
+                }} onClick = {() => {navigate('/courseprofile')}}
               >
                 <CardMedia
                   component="img"
