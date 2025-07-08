@@ -4,6 +4,10 @@ import MLCourse from '../assets/MLCourse.png';
 import WEB3Course from '../assets/WEB3Course.png';
 import WebDevCourse from '../assets/webDevCourse.png';
 import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 const courseImages = [
   { src: DSCourse, alt: 'DS Course' },
@@ -13,6 +17,7 @@ const courseImages = [
 ];
 
 function HeroSection() {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -80,7 +85,7 @@ function HeroSection() {
       <Grid container spacing={3} justifyContent="center" sx={{ maxWidth: 1200, mt: 2, mb: 0 }}>
         {courseImages.map((img, idx) => (
           <Grid item xs={12} sm={6} md={3} key={idx}>
-            <Card sx={{ borderRadius: 5, boxShadow: 3, overflow: 'hidden', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.04)' } }}>
+            <Card sx={{ borderRadius: 5, boxShadow: 3, overflow: 'hidden', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.04)' }}} onClick = {()=>{navigate('/searchcourses')}}>
               <CardMedia
                 component="img"
                 height="200"
