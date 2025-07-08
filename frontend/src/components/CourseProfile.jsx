@@ -4,15 +4,19 @@ import {
   List, ListItem, ListItemText, Divider
 } from '@mui/material';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+
 
 const CourseProfile = () => {
+  const location = useLocation();
   const [course, setCourse] = useState(null);
   const [isPurchased, setIsPurchased] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
-
+  const importedCourse = location.state?.course;
+  const playlistID = importedCourse.link;
   const fetchData = async () => {
     try {
-      const res = await axios.get('https://edu-share-project.vercel.app/api/playlist');
+      const res = await axios.get('https://edu-share-project.vercel.app/api/playlist',{params: { playlistID }});
       setCourse(res.data);
     } catch (err) {
       console.error('Failed to fetch course data:', err);

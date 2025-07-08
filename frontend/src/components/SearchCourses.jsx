@@ -57,7 +57,7 @@ function SearchCourses() {
                   flexDirection: 'column',
                   transition: 'transform 0.2s',
                   '&:hover': { transform: 'scale(1.03)' },
-                }} onClick = {() => {navigate('/courseprofile')}}
+                }} onClick = {() => {navigate('/courseprofile', { state: { course } })}}
               >
                 <CardMedia
                   component="img"

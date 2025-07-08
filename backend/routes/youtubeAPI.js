@@ -4,7 +4,6 @@ const axios = require('axios');
 require('dotenv').config();
 const { UserModel, UserCoursesModel, CourseDataModel } = require('../models/db');
 const API_KEY = process.env.YOUTUBE_API_KEY;
-const PLAYLIST_ID = 'PLWz5rJ2EKKc9CBxr3BVjPTPoDPLdPIFCE';
 
 
 /**
@@ -59,14 +58,14 @@ const parseDuration = (ISO) => {
 };
 
 // Main function to fetch and process YouTube playlist data
-const fetchData = async () => {
+const fetchData = async (playlistID) => {
   try {
     // Step 1: Get playlist items (video IDs and metadata)
     const res = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems', {
       params: {
         part: 'snippet',
         maxResults: 10,
-        playlistId: PLAYLIST_ID,
+        playlistId: playlistID,
         key: API_KEY,
       },
     });
@@ -112,7 +111,8 @@ const fetchData = async () => {
 
 // Route to serve playlist/course data
 router.get('/playlist', async (req, res) => {
-  const data = await fetchData();
+  const playlistID = req.query.playlistID;
+  const data = await fetchData(playlistID);
   if (data) {
     res.json(data);
   } else {
@@ -135,6 +135,7 @@ router.get('/searchcourse', async (req, res) => {
         return {
           name: course.name,
           image: thumbnail || 'https://via.placeholder.com/300x200?text=No+Image',
+          link: course.link
         };
       })
     );
