@@ -6,9 +6,6 @@ import WebDevCourse from '../assets/webDevCourse.png';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-
-
-
 const courseImages = [
   { src: DSCourse, alt: 'DS Course' },
   { src: MLCourse, alt: 'ML Course' },
@@ -66,18 +63,44 @@ function HeroSection() {
           component={RouterLink}
           to="/searchcourses"
           variant="contained"
-          color="warning"
           size="large"
-          sx={{ fontWeight: 600, borderRadius: 2, px: 4 }}
+          sx={{
+            fontWeight: 600,
+            borderRadius: 2,
+            px: 4,
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            color: '#fff',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+            transition: '0.3s',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            },
+          }}
         >
           Explore Courses
         </Button>
         <Button
           variant="contained"
-          color="inherit"
           size="large"
-          onClick={()=>{alert("functionality not added")}}
-          sx={{ fontWeight: 600, borderRadius: 2, px: 4, background: 'linear-gradient(92.36deg, #d9d9d9, #737373)', color: '#222' }}
+          onClick={() => { alert("functionality not added") }}
+          sx={{
+            fontWeight: 600,
+            borderRadius: 2,
+            px: 4,
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            color: '#fff',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+            transition: '0.3s',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            },
+          }}
         >
           Create Courses
         </Button>
@@ -85,7 +108,7 @@ function HeroSection() {
       <Grid container spacing={3} justifyContent="center" sx={{ maxWidth: 1200, mt: 2, mb: 0 }}>
         {courseImages.map((img, idx) => (
           <Grid item xs={12} sm={6} md={3} key={idx}>
-            <Card sx={{ borderRadius: 5, boxShadow: 3, overflow: 'hidden', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.04)' }}} onClick = {()=>{navigate('/searchcourses')}}>
+            <Card sx={{ borderRadius: 5, boxShadow: 3, overflow: 'hidden', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.04)' }}} onClick={() => { navigate('/searchcourses') }}>
               <CardMedia
                 component="img"
                 height="200"
