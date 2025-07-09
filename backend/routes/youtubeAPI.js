@@ -153,13 +153,12 @@ router.get('/checkcourse', async (req, res) => {
     const { playlistID, token } = req.query;
     const JWT_SECRET = "thisismyproject";
     const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.id;
+    const email = decoded.email;
     const course = await CourseDataModel.findOne({ link: playlistID });
     if (!course) {
       return res.status(404).json({ flag: false, message: "Course not found" });
     }
-    const user = await UserCoursesModel.findById(userId);
-    if (!user) {
+    const user = await UserCoursesModel.findOne({ email: email });    if (!user) {
       return res.status(404).json({ flag: false, message: "User not found" });
     }
     const hasCourse = user.courses.includes(course._id);
