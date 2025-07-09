@@ -159,6 +159,9 @@ router.get('/checkcourse', async (req, res) => {
       return res.status(404).json({ flag: false, message: "Course not found" });
     }
     const user = await UserCoursesModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ flag: false, message: "User not found" });
+    }
     const hasCourse = user.courses.includes(course._id);
     res.json({ flag: hasCourse });
 
