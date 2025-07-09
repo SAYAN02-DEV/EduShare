@@ -22,7 +22,32 @@ const CourseProfile = () => {
       console.error('Failed to fetch course data:', err);
     }
   };
+  async function handlePurchase(link){
+    const token = localStorage.getItem('token');
+    if(!token){
+      alert("Please login first!");
+    }else{
+      try{
+        const res = await axios.get('https://edu-share-project.vercel.app/api/purchaseid', {params: {link}});
+        const courseID = res.data.id;
+        if(courseID){
+          try{
+              await axios.post('https://edu-share-project.vercel.app/user/purchase', {courseId: courseID}, {
+                headers:{
+                  token: token
+                }
+              });
+              setIsPurchased(true);
+          }catch(error){
+            console.log(error);
+          }
+        } 
+      }catch(error){
+        console.log(error);
+      }
 
+    }
+  }
     async function checkCourse(){
     try{
       const token = localStorage.getItem('token');
@@ -104,7 +129,7 @@ const CourseProfile = () => {
           <Typography variant="body2" sx={{ mb: 2 }}>
             <b>Price:</b> {course.price}
           </Typography>
-          <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }}>
+          <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }} onClick={() => {handlePurchase(playlistID)}}>
             Buy Course
           </Button>
         </Card>
