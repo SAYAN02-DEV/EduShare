@@ -23,8 +23,19 @@ const CourseProfile = () => {
     }
   };
 
+    async function checkCourse(){
+    try{
+      const token = localStorage.getItem('token');
+      const res = await axios.get('https://edu-share-project.vercel.app/api/checkcourse',{params:{token, playlistID}});
+      setIsPurchased(res.data.flag);
+    }catch(err){
+      console.log('failed to check course availability');
+    }
+  }
+
   useEffect(() => {
     fetchData();
+    checkCourse();
   }, []);
 
   const handleWatch = (videoUrl) => {

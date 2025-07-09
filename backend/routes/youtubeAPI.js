@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const { UserModel, UserCoursesModel, CourseDataModel } = require('../models/db');
 const API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -147,7 +148,25 @@ router.get('/searchcourse', async (req, res) => {
   }
 });
 
+router.get('/checkcourse', async (req, res) => {
+  try {
+    const { playlistID, token } = req.query;
+    const JWT_SECRET = "thisismyproject";
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.id;
+    const course = await CourseDataModel.findOne({ link: playlistID });
+    if (!course) {
+      return res.status(404).json({ flag: false, message: "Course not found" });
+    }
+    const user = await UserCoursesModel.findById(userId);
+    const hasCourse = user.courses.includes(course._id);
+    res.json({ flag: hasCourse });
 
+  } catch (error) {
+    console.error("Error in checking course:", error);
+    res.status(500).json({ error: 'Failed to check course' });
+  }
+});
 
 
 
