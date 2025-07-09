@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom';
 const CourseProfile = () => {
   const location = useLocation();
   const [course, setCourse] = useState(null);
-  const [isPurchased, setIsPurchased] = useState(true);
+  const [isPurchased, setIsPurchased] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const importedCourse = location.state?.course;
   const playlistID = importedCourse.link;
