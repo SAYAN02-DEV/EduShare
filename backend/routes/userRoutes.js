@@ -77,7 +77,7 @@ router.post('/purchase', userAuth, async (req, res) => {
         if (!userCourses) {
             userCourses = new UserCoursesModel({ email: req.email, courses: [courseId] });
         } else {
-            if (userCourses.courses.includes(courseId)) {
+            if (userCourses.courses.includes(courseId)) { 
                 return res.status(409).json({ message: "Course already purchased" });
             }
             userCourses.courses.push(courseId);

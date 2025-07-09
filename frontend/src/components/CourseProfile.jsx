@@ -14,6 +14,7 @@ const CourseProfile = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const importedCourse = location.state?.course;
   const playlistID = importedCourse.link;
+  const token = localStorage.getItem('token');
   const fetchData = async () => {
     try {
       const res = await axios.get('https://edu-share-project.vercel.app/api/playlist',{params: { playlistID }});
@@ -23,9 +24,35 @@ const CourseProfile = () => {
     }
   };
 
+  async function handlePurchase(link){
+    //I have to feed the link and get the course _id
+    if(!token){
+      alert("Please login first!");
+    }else{
+      try{
+        const res = await axios.get('https://edu-share-project.vercel.app/api/purchaseid', {params: {playlistID}});
+        const courseID = res.data.id;
+        if(courseID){
+          try{
+              await axios.post('https://edu-share-project.vercel.app/user/purchase', {courseId: courseID}, {
+                headers:{
+                  token: token
+                }
+              });
+              setIsPurchased(true);
+          }catch(error){
+            console.log(error);
+          }
+        } 
+      }catch(error){
+        console.log(error);
+      }
+
+    }
+  }
+
     async function checkCourse(){
-    try{
-      const token = localStorage.getItem('token');
+    try{      
       const res = await axios.get('https://edu-share-project.vercel.app/api/checkcourse',{params:{token, playlistID}});
       setIsPurchased(res.data.flag);
     }catch(err){
@@ -104,7 +131,7 @@ const CourseProfile = () => {
           <Typography variant="body2" sx={{ mb: 2 }}>
             <b>Price:</b> {course.price}
           </Typography>
-          <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }}>
+          <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }} onClick={() => {handlePurchase(playlistID)}}>
             Buy Course
           </Button>
         </Card>

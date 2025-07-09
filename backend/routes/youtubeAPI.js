@@ -168,7 +168,18 @@ router.get('/checkcourse', async (req, res) => {
   }
 });
 
-
+router.get('/purchaseid', async(req, res) => {
+  try{
+    const { playlistID } = req.query;
+    const course = await CourseDataModel.findOne({ link: playlistID });
+    if (!course) {
+      return res.status(404).json({ flag: false, message: "Course not found" });
+    }
+    res.json({ id: course._id });
+  }catch(error){
+    console.log(error);
+  }
+});
 
 
 

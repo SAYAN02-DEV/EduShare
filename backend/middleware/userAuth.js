@@ -4,7 +4,7 @@ const { UserModel, UserCoursesModel, CourseDataModel } = require('../models/db')
 
 async function userAuth(req, res, next){
 
-    try {
+    try { 
         const token = req.headers.token;
         const decoded = jwt.verify(token, JWT_SECRET);
         req.email = decoded.email;
