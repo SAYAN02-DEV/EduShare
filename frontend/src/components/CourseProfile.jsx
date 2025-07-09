@@ -53,9 +53,9 @@ const CourseProfile = () => {
     }
   }
 
-    async function checkCourse(){
+     async function checkCourse(){
     try{
-      const token = localStorage.getItem('token');      
+      const token = localStorage.getItem('token');
       const res = await axios.get('https://edu-share-project.vercel.app/api/checkcourse',{params:{token, playlistID}});
       setIsPurchased(res.data.flag);
     }catch(err){
