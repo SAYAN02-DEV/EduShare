@@ -10,14 +10,12 @@ import { useLocation } from 'react-router-dom';
 const CourseProfile = () => {
   const location = useLocation();
   const [course, setCourse] = useState(null);
-  const [isPurchased, setIsPurchased] = useState(false);
+  const [isPurchased, setIsPurchased] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const importedCourse = location.state?.course;
   const playlistID = importedCourse.link;
-  
   const fetchData = async () => {
     try {
-      // const token = localStorage.getItem('token');
       const res = await axios.get('https://edu-share-project.vercel.app/api/playlist',{params: { playlistID }});
       setCourse(res.data);
     } catch (err) {
@@ -25,35 +23,7 @@ const CourseProfile = () => {
     }
   };
 
-  async function handlePurchase(link){
-    //I have to feed the link and get the course _id
-    const token = localStorage.getItem('token');
-    if(!token){
-      alert("Please login first!");
-    }else{
-      try{
-        const res = await axios.get('https://edu-share-project.vercel.app/api/purchaseid', {params: {link}});
-        const courseID = res.data.id;
-        if(courseID){
-          try{
-              await axios.post('https://edu-share-project.vercel.app/user/purchase', {courseId: courseID}, {
-                headers:{
-                  token: token
-                }
-              });
-              setIsPurchased(true);
-          }catch(error){
-            console.log(error);
-          }
-        } 
-      }catch(error){
-        console.log(error);
-      }
-
-    }
-  }
-
-     async function checkCourse(){
+    async function checkCourse(){
     try{
       const token = localStorage.getItem('token');
       const res = await axios.get('https://edu-share-project.vercel.app/api/checkcourse',{params:{token, playlistID}});
@@ -134,7 +104,7 @@ const CourseProfile = () => {
           <Typography variant="body2" sx={{ mb: 2 }}>
             <b>Price:</b> {course.price}
           </Typography>
-          <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }} onClick={() => {handlePurchase(playlistID)}}>
+          <Button variant="contained" color="primary" sx={{ mt: 1, width: '100%' }}>
             Buy Course
           </Button>
         </Card>
