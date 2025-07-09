@@ -49,23 +49,16 @@ const CourseProfile = () => {
     }
   }
     async function checkCourse(){
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setIsPurchased(false);
-      return;
-    }
     try{
+      const token = localStorage.getItem('token');
       const res = await axios.get('https://edu-share-project.vercel.app/api/checkcourse',{params:{token, playlistID}});
       setIsPurchased(res.data.flag);
     }catch(err){
-      setIsPurchased(false);
+      console.log('failed to check course availability');
     }
   }
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem('token'));
     fetchData();
     checkCourse();
   }, []);
@@ -163,7 +156,7 @@ const CourseProfile = () => {
             {course.videos.map((video, idx) => (
               <ListItem key={idx} sx={{ px: 0 }}
                 secondaryAction={
-                  isLoggedIn && isPurchased ? (
+                  isPurchased ? (
                     <Button
                       variant="contained"
                       color="success"
@@ -172,22 +165,7 @@ const CourseProfile = () => {
                     >
                       Watch
                     </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      onClick={() => {
-                        if (!isLoggedIn) {
-                          alert("Please login to watch this video.");
-                        } else {
-                          alert("Please purchase the course to watch this video.");
-                        }
-                      }}
-                    >
-                      Watch
-                    </Button>
-                  )
+                  ) : null
                 }
               >
                 <ListItemText
