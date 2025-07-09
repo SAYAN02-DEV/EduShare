@@ -14,10 +14,9 @@ const CourseProfile = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const importedCourse = location.state?.course;
   const playlistID = importedCourse.link;
-  
+  const token = localStorage.getItem('token');
   const fetchData = async () => {
     try {
-      // const token = localStorage.getItem('token');
       const res = await axios.get('https://edu-share-project.vercel.app/api/playlist',{params: { playlistID }});
       setCourse(res.data);
     } catch (err) {
@@ -27,12 +26,11 @@ const CourseProfile = () => {
 
   async function handlePurchase(link){
     //I have to feed the link and get the course _id
-    const token = localStorage.getItem('token');
     if(!token){
       alert("Please login first!");
     }else{
       try{
-        const res = await axios.get('https://edu-share-project.vercel.app/api/purchaseid', {params: {link}});
+        const res = await axios.get('https://edu-share-project.vercel.app/api/purchaseid', {params: {playlistID}});
         const courseID = res.data.id;
         if(courseID){
           try{
@@ -54,8 +52,7 @@ const CourseProfile = () => {
   }
 
     async function checkCourse(){
-    try{
-      const token = localStorage.getItem('token');      
+    try{      
       const res = await axios.get('https://edu-share-project.vercel.app/api/checkcourse',{params:{token, playlistID}});
       setIsPurchased(res.data.flag);
     }catch(err){
