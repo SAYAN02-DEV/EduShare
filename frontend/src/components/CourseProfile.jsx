@@ -28,7 +28,7 @@ const CourseProfile = () => {
       alert("Please login first!");
     }else{
       try{
-        const res = await axios.get('https://edu-share-project.vercel.app/api/purchaseid', {params: {link}});
+        const res = await axios.get('https://edu-share-project.vercel.app/api/purchaseid', {params: {playlistID: link}});
         const courseID = res.data.id;
         if(courseID){
           try{
